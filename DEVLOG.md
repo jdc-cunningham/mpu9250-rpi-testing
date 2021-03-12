@@ -10,3 +10,10 @@ Minimum goals today are to see the values reflect my physical movements. Then st
 
 Hopefully can display it live to a web app that has a socket running/showing D3 JS.
 
+Ooh... so the Pi on SLAM-crappy is already using the SDA/SCL lines for i2c.
+
+### initial problems
+smbus2, i2c enable
+
+Had to resolder I guess, I tried a second one thought first one was dead, resoldered pins, worked
+
