@@ -64,7 +64,8 @@ async def streamMpuData(websocket, path):
       str(gyroData[2]) + "," +
       str(magData[0]) + "," +
       str(magData[1]) + "," +
-      str(magData[2]))
+      str(magData[2])
+    )
 
     await websocket.send(
       dataStr
