@@ -24,8 +24,8 @@ mpu = MPU9250(
 
 # these are primarily for calibrating and adapting to the sensor board if it has problems
 # ex. $python3 sensor-read-websocket-server.py
-# ex. $python3 sensor-read-websocket-server.py true
-# ex. $python3 sensor-read-websocket-server.py false 69
+# ex. $python3 sensor-read-websocket-server.py all
+# ex. $python3 sensor-read-websocket-server.py mpu 69
 def get_cli_args(name='default', calibrate='', address=''):
   global mpu
   if (address == '69'):
