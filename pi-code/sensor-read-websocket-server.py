@@ -11,41 +11,45 @@ import websockets
 from mpu9250_jmdev.registers import *
 from mpu9250_jmdev.mpu_9250 import MPU9250
 
-mpu = MPU9250(
-  address_ak=AK8963_ADDRESS,
-  address_mpu_master=MPU9050_ADDRESS_68, # 0x68
-  address_mpu_slave=None,
-  bus=1,
-  gfs=GFS_1000,
-  afs=AFS_8G,
-  mfs=AK8963_BIT_16,
-  mode=AK8963_MODE_C100HZ
-)
-
 # these are primarily for calibrating and adapting to the sensor board if it has problems
 # ex. $python3 sensor-read-websocket-server.py
 # ex. $python3 sensor-read-websocket-server.py all
-# ex. $python3 sensor-read-websocket-server.py mpu 69
+# ex. $python3 sensor-read-websocket-server.py mpu
 def get_cli_args(name='default', calibrate='', address=''):
+  
   global mpu
-  if (address == '69'):
-    print('change bus address to 69')
-    mpu.address_mpu_master = MPU9050_ADDRESS_69
+
+  mpu = MPU9250(
+    address_ak=AK8963_ADDRESS,
+    address_mpu_master=MPU9050_ADDRESS_69 if address == '69' else MPU9050_ADDRESS_68,
+    address_mpu_slave=None,
+    bus=1,
+    gfs=GFS_1000,
+    afs=AFS_8G,
+    mfs=AK8963_BIT_16,
+    mode=AK8963_MODE_C100HZ
+  )
+
+  mpu.configure() # apply settings to registers
+
   if (calibrate == 'all'):
     print('calibrating...')
+    print('if it fails, try mpu instead of all')
     mpu.calibrateMPU6500()
     mpu.calibrateAK8963()
-  if (calibrate == 'mpu'):
+    mpu.configureMPU6500(mpu.gfs, mpu.afs)
+    mpu.configureAK8963(mpu.mfs, mpu.mode)
+  elif (calibrate == 'mpu'):
     print('calibrating...')
     mpu.calibrateMPU6500()
-  if (calibrate == 'mag'):
+    mpu.configureMPU6500(mpu.gfs, mpu.afs)
+  elif (calibrate == 'mag'):
     print('calibrating...')
     mpu.calibrateAK8963()
-    
+    mpu.configureAK8963(mpu.mfs, mpu.mode)
 
 # check for cli args related to calibration
 get_cli_args(*sys.argv)
-mpu.configure() # apply settings to registers
 
 async def streamMpuData(websocket, path):
   while True:
