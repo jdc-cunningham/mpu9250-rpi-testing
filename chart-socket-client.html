@@ -6,19 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="chartjs.min.2.9.4.js"></script>
+    <style>
+      button {
+        cursor: pointer;
+      }
+
+      button.active {
+        background-color: #303030;
+        color: white;
+      }
+    </style>
   </head>
   <body>
+    <span>
+      <h2>Toggle data - active: <span id="active-sensor-display">Accelerometer</span></h2>
+      <button id="accel-btn" type="button" data-sensor="accel" class="active">Accelerometer</button>
+      <button id="gyro-btn" type="button" data-sensor="gyro">Gyroscope</button>
+      <button id="mag-btn" type="button" data-sensor="mag">Magnetometer</button>
+    </span>
     <canvas id="myChart" width="400" height="400"></canvas>
     <script>
       // multi-line chart
       // https://stackoverflow.com/questions/49489670/chart-js-displaying-multiple-line-charts-using-multiple-labels
+      let activeSensor = 'accel';
+      let activeSensorOffset = 0; // gyro would be 3, mag would be 6
+      const activeSensorDisplay = document.getElementById('active-sensor-display');
+      const sensorOffsets = {
+        'accel': 0, // everything starts at 0 sensor wise
+        'gyro': 3,
+        'mag': 6,
+      };
+      const sensorEnum = {
+        'accel': 'Accelerometer',
+        'gyro': 'Gyroscope',
+        'mag': 'Magnetometer'
+      }
+      
       var ctx = document.getElementById('myChart').getContext('2d');
       var myChart = new Chart(ctx, {
           type: 'scatter',
           data: {
             datasets: [
               {
-                label: 'Acceleremoter',
+                label: 'x',
                 data: [],
                 showLine: true,
                 borderColor: 'rgba(0, 200, 0, 1)',
@@ -26,7 +56,7 @@
                 fill: false
               },
               {
-                label: 'Gyroscope',
+                label: 'y',
                 data: [],
                 showLine: true,
                 borderColor: 'rgba(0, 0, 255, 1)',
@@ -34,7 +64,7 @@
                 fill: false
               },
               {
-                label: 'Magnetometer',
+                label: 'z',
                 data: [],
                 showLine: true,
                 borderColor: 'rgba(255, 0, 0, 1)',
@@ -56,6 +86,26 @@
             }
           }
       });
+      
+      // handle buttons
+      const accelBtn = document.getElementById('accel-btn');
+      const gyroBtn = document.getElementById('gyro-btn');
+      const magBtn = document.getElementById('mag-btn');
+
+      const clearBtnClasses = () => {
+        [accelBtn, gyroBtn, magBtn].forEach(btn => btn.classList = "");
+      }
+
+      [accelBtn, gyroBtn, magBtn].forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          activeSensor = event.target.dataset.sensor;
+          activeSensorOffset = sensorOffsets[activeSensor];
+          activeSensorDisplay.innerText = sensorEnum[activeSensor];
+          clearBtnClasses();
+          btn.classList = "active";
+        });
+      });
+
     </script>
     <script>
       let rPiSocket;
@@ -72,14 +122,17 @@
           const sensorData = event.data.split(","); // accel, gyro, mag
 
           console.log('msg', event);
-          myChart.data.datasets[0].data.push({
-            x: xTime,
-            y: sensorData[0]
-          })
-          myChart.data.datasets[0].data = myChart.data.datasets[0].data.slice(
-            myChart.data.datasets[0].data.length - 100,
-            100
-          );
+
+          [0, 1, 2].forEach(dataIndex => {
+            myChart.data.datasets[dataIndex].data.push({
+              x: xTime,
+              y: sensorData[activeSensorOffset + dataIndex]
+            })
+            myChart.data.datasets[dataIndex].data = myChart.data.datasets[dataIndex].data.slice(
+              myChart.data.datasets[dataIndex].data.length - 100,
+              100
+            );
+          });
           myChart.update();
         };
 

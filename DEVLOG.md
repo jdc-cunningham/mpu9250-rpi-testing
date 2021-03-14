@@ -8,7 +8,7 @@ The Pi also has male headers ugh.
 
 Minimum goals today are to see the values reflect my physical movements. Then start to work out the rotation. Will start with a box moving based on IMU position.
 
-Hopefully can display it live to a web app that has a socket running/showing D3 JS.
+Hopefully can display it live to a web app that has a socket running/showing ThreeJS.
 
 Ooh... so the Pi on SLAM-crappy is already using the SDA/SCL lines for i2c.
 
@@ -20,3 +20,4 @@ Nope it's actually dead hmm
 
 ### Charting
 I wanted to plot the values in real time... landed on PyQtGraph
+Nope, no GUI for headless Pi forgot
