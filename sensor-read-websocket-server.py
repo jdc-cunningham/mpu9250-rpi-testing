@@ -4,7 +4,7 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-import os
+import os, sys
 import time
 import asyncio
 import websockets
@@ -22,9 +22,19 @@ mpu = MPU9250(
   mode=AK8963_MODE_C100HZ
 )
 
-# mpu.calibrate()
-# mpu.calibrateAK8963()
-mpu.calibrateMPU6500()
+# can pass in all, ak, mpu
+# ex. $python3 sensor-read-websocket-server.py all
+# ex. $python3 sensor-read-websocket-server.py ak
+def get_cli_args(name='default', calibrate='calibrate'):
+  if (calibrate == 'all'):
+    mpu.calibrate()
+  elif (calibrate == 'mpu'):
+    mpu.calibrateMPU6500()
+  elif (calibrate == 'ak'):
+    mpu.calibrateAK8963()
+
+# check for cli args related to calibration
+get_cli_args(*sys.argv)
 mpu.configure() # apply settings to registers
 
 async def streamMpuData(websocket, path):

@@ -9,3 +9,13 @@ See video below demoing it.
 You will have to move some of this code over to your Pi which is connected to your MPU sensor. Install the related dependencies(note needs Python 3). Then just run the `sensor-read-websocket-server.py` file. You may want to test the values first before hand `and/or` run the sensor calibration stuff. This is just a minor tool for me so I didn't really spend much time on it.
 
 The web page you'd have to open on your computer/device after running the python script above. It doesn't really matter which one runs first, as the browser keeps trying to connect to the socket server over and over.
+
+### Optional CLI calibration
+I don't actually consider this optional. You should run this. Sometimes depending on the board all will run fine or only one will. To run calibration as well:
+
+`$python3 sensor-read-websocket-server.py all` all three
+`$python3 sensor-read-websocket-server.py mpu` accel and gyro
+`$python3 sensor-read-websocket-server.py ak` mag only
+
+### Check i2c bus
+Using `$i2cdetect -y 1` can check if the sensor is showing up assuming you've properly wired it(follow MPU library). I didn't connect anything to `AD0` I am just using one sensor. Sometimes I've seen the bus address switch from `68` to `69`. This code is hardcoded to check for `68` may have to change that.
