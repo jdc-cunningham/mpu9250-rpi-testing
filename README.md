@@ -14,7 +14,7 @@ The web page you'd have to open on your computer/device after running the python
 I don't actually consider this optional. You should run this. Sometimes depending on the board all will run fine or only one will. To run calibration as well:
 
 `$python3 sensor-read-websocket-server.py` no calibration
-`$python3 sensor-read-websocket-server.py true` calibrate
+`$python3 sensor-read-websocket-server.py all` calibrate (can also target mpu or mag only)
 `$python3 sensor-read-websocket-server.py false 69` don't calibrate change bus addr
 
 Sometimes the bus address can switch to 69 even when AD0 is not connected to anything.

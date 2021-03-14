@@ -40,11 +40,16 @@ def get_cli_args(name='default', calibrate='', address=''):
       mfs=AK8963_BIT_16,
       mode=AK8963_MODE_C100HZ
     )
-  if (calibrate == 'true'):
+  if (calibrate == 'all'):
     print('calibrating...')
     mpu.calibrateMPU6500()
     mpu.calibrateAK8963()
-
+  if (calibrate == 'mpu'):
+    print('calibrating...')
+    mpu.calibrateMPU6500()
+  if (calibrate == 'mag'):
+    print('calibrating...')
+    mpu.calibrateAK8963()
     
 
 # check for cli args related to calibration
