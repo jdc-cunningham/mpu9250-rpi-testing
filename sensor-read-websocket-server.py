@@ -30,16 +30,7 @@ def get_cli_args(name='default', calibrate='', address=''):
   global mpu
   if (address == '69'):
     print('change bus address to 69')
-    mpu = MPU9250( # ehh this sucks
-      address_ak=AK8963_ADDRESS,
-      address_mpu_master=MPU9050_ADDRESS_69, # 0x68
-      address_mpu_slave=None,
-      bus=1,
-      gfs=GFS_1000,
-      afs=AFS_8G,
-      mfs=AK8963_BIT_16,
-      mode=AK8963_MODE_C100HZ
-    )
+    mpu.address_mpu_master = MPU9050_ADDRESS_69
   if (calibrate == 'all'):
     print('calibrating...')
     mpu.calibrateMPU6500()

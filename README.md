@@ -21,3 +21,10 @@ Sometimes the bus address can switch to 69 even when AD0 is not connected to any
 
 ### Check i2c bus
 Using `$i2cdetect -y 1` can check if the sensor is showing up assuming you've properly wired it(follow MPU library). I didn't connect anything to `AD0` I am just using one sensor. Sometimes I've seen the bus address switch from `68` to `69`. This code is hardcoded to check for `68` may have to change that.
+
+### Calibration steps/proper connection/stuff to check out
+I had opened up an "issue" [here](https://github.com/Intelligent-Vehicle-Perception/MPU-9250-Sensors-Data-Collect/issues/13) and I got some info for things to try to get better "functionality?". There are some interesting things regarding the mangetometer address not showing up(I thought it was a fluke generally never appeared). Also how to change the active address of an already instantiated mpu. Generally using `sudo`.
+
+1) run `$sudo raspi-config` and enable `i2c`
+2) check addresses that appear hopefully both 0x68 and 0x0C appear
+  - 0x0C did not appear for me in the 4 sensors I "hot swap" tested. Not sure if it's worth restarting the Pi to be absolutely sure. Possible need to mess around with registers to get them to show up.
