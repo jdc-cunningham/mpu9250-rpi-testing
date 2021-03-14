@@ -33,9 +33,10 @@ def get_cli_args(name='default', calibrate='', address='', reset=''):
 
   mpu.configure() # apply settings to registers
 
-  if (reset == 'man'): # ha
+  if (calibrate == 'man'): # ha
     print('calibrate: (all, mpu, mag), address: (68, 69), reset: (true, false)')
     print('ex: $python3 sensor-read-websocket-server.py mpu 69')
+    exit()
 
   if (reset == 'true'):
     mpu.reset()
