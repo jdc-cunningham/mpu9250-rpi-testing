@@ -12,10 +12,11 @@ from mpu9250_jmdev.registers import *
 from mpu9250_jmdev.mpu_9250 import MPU9250
 
 # these are primarily for calibrating and adapting to the sensor board if it has problems
+# the args method is not great, it's positional based can't be empty eg. use false for empty
 # ex. $python3 sensor-read-websocket-server.py
 # ex. $python3 sensor-read-websocket-server.py all
-# ex. $python3 sensor-read-websocket-server.py mpu
-def get_cli_args(name='default', calibrate='', address=''):
+# ex. $python3 sensor-read-websocket-server.py false false true
+def get_cli_args(name='default', calibrate='', address='', reset=''):
   
   global mpu
 
@@ -31,6 +32,15 @@ def get_cli_args(name='default', calibrate='', address=''):
   )
 
   mpu.configure() # apply settings to registers
+
+  if (reset == 'man'): # ha
+    print('calibrate: (all, mpu, mag), address: (68, 69), reset: (true, false)')
+    print('ex: $python3 sensor-read-websocket-server.py mpu 69')
+
+  if (reset == 'true'):
+    mpu.reset()
+    print('mpu reset, restart pi')
+    exit()
 
   if (calibrate == 'all'):
     print('calibrating...')
