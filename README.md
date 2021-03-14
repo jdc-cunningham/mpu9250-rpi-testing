@@ -13,9 +13,11 @@ The web page you'd have to open on your computer/device after running the python
 ### Optional CLI calibration
 I don't actually consider this optional. You should run this. Sometimes depending on the board all will run fine or only one will. To run calibration as well:
 
-`$python3 sensor-read-websocket-server.py all` all three
-`$python3 sensor-read-websocket-server.py mpu` accel and gyro
-`$python3 sensor-read-websocket-server.py ak` mag only
+`$python3 sensor-read-websocket-server.py` no calibration
+`$python3 sensor-read-websocket-server.py true` calibrate
+`$python3 sensor-read-websocket-server.py false 69` don't calibrate change bus addr
+
+Sometimes the bus address can switch to 69 even when AD0 is not connected to anything.
 
 ### Check i2c bus
 Using `$i2cdetect -y 1` can check if the sensor is showing up assuming you've properly wired it(follow MPU library). I didn't connect anything to `AD0` I am just using one sensor. Sometimes I've seen the bus address switch from `68` to `69`. This code is hardcoded to check for `68` may have to change that.

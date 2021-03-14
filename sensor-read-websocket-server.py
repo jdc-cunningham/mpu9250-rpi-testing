@@ -22,16 +22,30 @@ mpu = MPU9250(
   mode=AK8963_MODE_C100HZ
 )
 
-# can pass in all, ak, mpu
-# ex. $python3 sensor-read-websocket-server.py all
-# ex. $python3 sensor-read-websocket-server.py ak
-def get_cli_args(name='default', calibrate='calibrate'):
-  if (calibrate == 'all'):
-    mpu.calibrate()
-  elif (calibrate == 'mpu'):
+# these are primarily for calibrating and adapting to the sensor board if it has problems
+# ex. $python3 sensor-read-websocket-server.py
+# ex. $python3 sensor-read-websocket-server.py true
+# ex. $python3 sensor-read-websocket-server.py false 69
+def get_cli_args(name='default', calibrate='', address=''):
+  global mpu
+  if (address == '69'):
+    print('change bus address to 69')
+    mpu = MPU9250( # ehh this sucks
+      address_ak=AK8963_ADDRESS,
+      address_mpu_master=MPU9050_ADDRESS_69, # 0x68
+      address_mpu_slave=None,
+      bus=1,
+      gfs=GFS_1000,
+      afs=AFS_8G,
+      mfs=AK8963_BIT_16,
+      mode=AK8963_MODE_C100HZ
+    )
+  if (calibrate == 'true'):
+    print('calibrating...')
     mpu.calibrateMPU6500()
-  elif (calibrate == 'ak'):
     mpu.calibrateAK8963()
+
+    
 
 # check for cli args related to calibration
 get_cli_args(*sys.argv)
