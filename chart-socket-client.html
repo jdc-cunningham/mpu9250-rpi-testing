@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="chartjs.min.2.9.4.js"></script>
+  </head>
+  <body>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script>
+      // multi-line chart
+      // https://stackoverflow.com/questions/49489670/chart-js-displaying-multiple-line-charts-using-multiple-labels
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'scatter',
+          data: {
+            datasets: [
+              {
+                label: 'Acceleremoter',
+                data: [],
+                showLine: true,
+                borderColor: 'rgba(0, 200, 0, 1)',
+                borderWidth: 1,
+                fill: false
+              },
+              {
+                label: 'Gyroscope',
+                data: [],
+                showLine: true,
+                borderColor: 'rgba(0, 0, 255, 1)',
+                borderWidth: 1,
+                fill: false
+              },
+              {
+                label: 'Magnetometer',
+                data: [],
+                showLine: true,
+                borderColor: 'rgba(255, 0, 0, 1)',
+                borderWidth: 1,
+                fill: false
+              }
+            ]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: false
+                }
+              }]
+            },
+            animation: {
+              duration: 0
+            }
+          }
+      });
+    </script>
+    <script>
+      let rPiSocket;
+
+      const connectSocket = () => {
+        rPiSocket = new WebSocket("ws://192.168.1.104:5678");
+
+        rPiSocket.onopen = (event) => {
+          console.log('connection open');
+        };
+
+        rPiSocket.onmessage = (event) => {
+          const xTime = Date.now();
+          const sensorData = event.data.split(","); // accel, gyro, mag
+
+          console.log('msg', event);
+          myChart.data.datasets[0].data.push({
+            x: xTime,
+            y: sensorData[0]
+          })
+          myChart.data.datasets[0].data = myChart.data.datasets[0].data.slice(
+            myChart.data.datasets[0].data.length - 100,
+            100
+          );
+          myChart.update();
+        };
+
+        rPiSocket.onclose = () => {
+          setTimeout(() => {
+            connectSocket(); // reconnect
+          }, 3000);
+        }
+      }
+
+      connectSocket();
+    </script>
+  </body>
+</html>

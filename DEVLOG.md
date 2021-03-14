@@ -16,4 +16,7 @@ Ooh... so the Pi on SLAM-crappy is already using the SDA/SCL lines for i2c.
 smbus2, i2c enable
 
 Had to resolder I guess, I tried a second one thought first one was dead, resoldered pins, worked
+Nope it's actually dead hmm
 
+### Charting
+I wanted to plot the values in real time... landed on PyQtGraph
